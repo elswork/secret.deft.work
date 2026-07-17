@@ -19,10 +19,10 @@
 
   <main class="app-container">
     <header class="app-header">
-      <div class="logo">
+      <a href="/" class="logo" id="logo-link" style="text-decoration: none; color: inherit;">
         <span class="logo-icon">🔒</span>
         <h1>DeftSecret</h1>
-      </div>
+      </a>
       <p class="subtitle">Compartición segura de secretos con cifrado de conocimiento cero local (AES-GCM)</p>
     </header>
 
@@ -71,7 +71,7 @@
 
             <div class="checkbox-group">
               <label class="checkbox-container">
-                <input type="checkbox" id="oneTime" checked>
+                <input type="checkbox" id="oneTime">
                 <span class="checkmark"></span>
                 <span class="checkbox-label">
                   <strong>Secreto de un solo uso (Autodestrucción)</strong>

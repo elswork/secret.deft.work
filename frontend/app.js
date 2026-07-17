@@ -132,6 +132,7 @@ const shareLinkInput = document.getElementById('shareLinkInput');
 const copyLinkBtn = document.getElementById('copyLinkBtn');
 const noticeOnetimer = document.getElementById('notice-onetimer');
 const resetBtn = document.getElementById('resetBtn');
+const logoLink = document.getElementById('logo-link');
 
 const decryptForm = document.getElementById('decrypt-form');
 const decryptPassword = document.getElementById('decryptPassword');
@@ -217,12 +218,27 @@ copyDecryptedBtn.addEventListener('click', () => {
   copyToClipboard(decryptedText, copyDecryptedBtn, '✅ Copiado');
 });
 
-resetBtn.addEventListener('click', () => {
+function resetToHome() {
   createForm.reset();
   charCounter.textContent = '0 / 1024 bytes';
   charCounter.style.color = 'var(--text-muted)';
+  
+  // Reset decrypt view states in case they are open
+  decryptedResult.classList.add('hidden');
+  decryptForm.classList.remove('hidden');
+  decryptMetaInfo.classList.add('hidden');
+  const instructions = document.getElementById('decrypt-instructions');
+  if (instructions) instructions.classList.remove('hidden');
+  decryptPassword.value = '';
+  
   window.history.pushState({}, '', '/');
   showView(viewCreate);
+}
+
+resetBtn.addEventListener('click', resetToHome);
+logoLink.addEventListener('click', (e) => {
+  e.preventDefault();
+  resetToHome();
 });
 
 // SUBMIT CREATE SECRET
