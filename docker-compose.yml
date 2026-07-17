@@ -24,4 +24,4 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Europe/Madrid
-      - ADMIN_PASSWORD=admin123  # Cambia esta clave por una más segura en producción
+      - ADMIN_PASSWORD=hwFgxC$)k9APtbQN
