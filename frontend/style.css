@@ -868,3 +868,93 @@ body.light-theme .card {
 body.light-theme .app-footer {
   border-top-color: rgba(0, 0, 0, 0.05);
 }
+
+/* Markdown Tabs & Live Preview Styling */
+.textarea-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.tabs-container {
+  display: flex;
+  gap: 0.25rem;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  padding: 0.2rem;
+  border-radius: 8px;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.tab-btn:hover {
+  color: var(--text-main);
+}
+
+.tab-btn.active {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 2px 4px var(--primary-glow);
+}
+
+.editor-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.preview-box {
+  width: 100%;
+  min-height: 150px;
+  height: 150px;
+  overflow-y: auto;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  color: var(--text-main);
+  text-align: left;
+}
+
+/* QR Code Styling */
+.qrcode-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem auto 1rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  max-width: 320px;
+}
+
+body.light-theme .qrcode-wrapper {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+#qrcode-container canvas {
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  max-width: 100%;
+  display: block;
+}
+
+.qrcode-help {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 0.75rem;
+  line-height: 1.4;
+}

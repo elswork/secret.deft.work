@@ -34,8 +34,17 @@
       <h2 class="card-title">Crear Nuevo Secreto</h2>
       <form id="create-form" onsubmit="return false;">
         <div class="input-group">
-          <label for="secretText">Tu mensaje secreto (máx. 1KB)</label>
-          <textarea id="secretText" placeholder="Escribe aquí tu mensaje confidencial..." maxlength="1024" required></textarea>
+          <div class="textarea-header">
+            <label for="secretText">Tu mensaje secreto (máx. 1KB)</label>
+            <div class="tabs-container">
+              <button type="button" class="tab-btn active" id="tab-edit">Editar</button>
+              <button type="button" class="tab-btn" id="tab-preview">Vista Previa</button>
+            </div>
+          </div>
+          <div class="editor-wrapper">
+            <textarea id="secretText" placeholder="Escribe aquí tu mensaje confidencial..." maxlength="1024" required></textarea>
+            <div id="previewText" class="preview-box markdown-body hidden"></div>
+          </div>
           <div class="textarea-footer">
             <span id="char-counter">0 / 1024 bytes</span>
           </div>
@@ -109,6 +118,11 @@
         <button type="button" id="copyLinkBtn" class="btn btn-secondary">Copiar Enlace</button>
       </div>
 
+      <div class="qrcode-wrapper">
+        <div id="qrcode-container"></div>
+        <p class="qrcode-help">Escanea este código QR con la cámara de tu móvil para abrir el secreto al instante.</p>
+      </div>
+
       <div class="security-notices">
         <p>🔒 <strong>Cifrado E2E:</strong> La contraseña nunca se subió al servidor. Debes compartirla por otro canal seguro.</p>
         <p id="notice-onetimer">🔥 Este secreto es de <strong>un solo uso</strong>. Una vez que el destinatario lo abra, se autodestruirá.</p>
@@ -177,6 +191,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

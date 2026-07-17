@@ -133,9 +133,14 @@ const oneTime = document.getElementById('oneTime');
 const submitBtn = document.getElementById('submitBtn');
 const createSpinner = document.getElementById('create-spinner');
 
+const tabEdit = document.getElementById('tab-edit');
+const tabPreview = document.getElementById('tab-preview');
+const previewText = document.getElementById('previewText');
+
 const shareLinkInput = document.getElementById('shareLinkInput');
 const copyLinkBtn = document.getElementById('copyLinkBtn');
 const noticeOnetimer = document.getElementById('notice-onetimer');
+const qrcodeContainer = document.getElementById('qrcode-container');
 const resetBtn = document.getElementById('resetBtn');
 const logoLink = document.getElementById('logo-link');
 
@@ -324,10 +329,43 @@ copyPasswordBtn.addEventListener('click', () => {
   }
 });
 
+// Markdown Tab switching logic (Edit vs Preview)
+if (tabEdit && tabPreview) {
+  tabEdit.addEventListener('click', () => {
+    tabEdit.classList.add('active');
+    tabPreview.classList.remove('active');
+    secretText.classList.remove('hidden');
+    previewText.classList.add('hidden');
+    secretText.focus();
+  });
+
+  tabPreview.addEventListener('click', () => {
+    tabEdit.classList.remove('active');
+    tabPreview.classList.add('active');
+    secretText.classList.add('hidden');
+    previewText.classList.remove('hidden');
+    
+    const text = secretText.value.trim();
+    if (!text) {
+      previewText.innerHTML = '<p style="color: var(--text-muted); font-style: italic; text-align: center; margin-top: 2rem;">Escribe algo en la pestaña "Editar" para previsualizarlo aquí...</p>';
+    } else {
+      previewText.innerHTML = DOMPurify.sanitize(marked.parse(text));
+    }
+  });
+}
+
 function resetToHome() {
   createForm.reset();
   charCounter.textContent = '0 / 1024 bytes';
   charCounter.style.color = 'var(--text-muted)';
+  
+  // Reset markdown tab to edit mode
+  if (tabEdit) {
+    tabEdit.classList.add('active');
+    tabPreview.classList.remove('active');
+    secretText.classList.remove('hidden');
+    previewText.classList.add('hidden');
+  }
   
   // Hide strength meter
   strengthContainer.style.display = 'none';
@@ -410,6 +448,26 @@ createForm.addEventListener('submit', async (e) => {
     // Success
     const shareUrl = `${window.location.origin}/v/${data.id}`;
     shareLinkInput.value = shareUrl;
+
+    // Generate QR Code dynamically
+    if (qrcodeContainer && typeof QRCode !== 'undefined') {
+      qrcodeContainer.innerHTML = '';
+      QRCode.toCanvas(
+        shareUrl, 
+        { 
+          width: 160, 
+          margin: 1,
+          color: {
+            dark: '#0c0a09', // Match our stone-charcoal primary dark theme color
+            light: '#ffffff'
+          }
+        }, 
+        (err, canvas) => {
+          if (err) console.error('Error generating QR Code:', err);
+          else qrcodeContainer.appendChild(canvas);
+        }
+      );
+    }
 
     if (oneTime.checked) {
       noticeOnetimer.classList.remove('hidden');
