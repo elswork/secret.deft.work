@@ -194,7 +194,7 @@ function showView(view) {
 // Copy to Clipboard Helpers
 async function copyToClipboard(inputEl, buttonEl, successText) {
   try {
-    await navigator.clipboard.writeText(inputEl.value || inputEl.textContent);
+    await navigator.clipboard.writeText(inputEl.value || inputEl.dataset.raw || inputEl.textContent);
     const originalText = buttonEl.textContent;
     buttonEl.textContent = successText;
     buttonEl.style.borderColor = 'var(--text-success)';
@@ -390,7 +390,10 @@ decryptForm.addEventListener('submit', async (e) => {
     );
 
     // Decryption Success!
-    decryptedText.textContent = decrypted;
+    // Parse Markdown to HTML and sanitize it using DOMPurify
+    const cleanHtml = DOMPurify.sanitize(marked.parse(decrypted));
+    decryptedText.innerHTML = cleanHtml;
+    decryptedText.dataset.raw = decrypted; // Save raw markdown for copying
     decryptedResult.classList.remove('hidden');
     
     if (currentSecretPayload.oneTime) {

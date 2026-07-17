@@ -135,7 +135,7 @@
       <div id="decrypted-result" class="decrypted-result hidden">
         <label for="decryptedText">Contenido Descifrado:</label>
         <div class="decrypted-box">
-          <pre id="decryptedText"></pre>
+          <div id="decryptedText" class="markdown-body"></div>
           <button type="button" id="copyDecryptedBtn" class="btn-icon-copy" title="Copiar al portapapeles">📋</button>
         </div>
         <div class="warning-alert" id="burn-warning">
@@ -163,6 +163,8 @@
     <p>DeftSecret &copy; 2026. Alojado localmente y cifrado de forma segura en el cliente.</p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>
