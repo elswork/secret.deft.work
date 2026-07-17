@@ -468,11 +468,9 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Initial theme check
+  // Initial theme check (always default to dark mode unless explicitly set to light)
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'light') {
-    setTheme('light');
-  } else if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
     setTheme('light');
   } else {
     setTheme('dark');
