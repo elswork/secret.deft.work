@@ -123,6 +123,7 @@ const secretText = document.getElementById('secretText');
 const charCounter = document.getElementById('char-counter');
 const secretPassword = document.getElementById('secretPassword');
 const genPasswordBtn = document.getElementById('genPasswordBtn');
+const copyPasswordBtn = document.getElementById('copyPasswordBtn');
 const strengthContainer = document.getElementById('strength-container');
 const strengthBar = document.getElementById('strength-bar');
 const strengthText = document.getElementById('strength-text');
@@ -310,6 +311,17 @@ genPasswordBtn.addEventListener('click', () => {
   secretPassword.type = 'text';
   const toggle = document.getElementById('toggle-create-password');
   if (toggle) toggle.textContent = '🙈';
+});
+
+copyPasswordBtn.addEventListener('click', () => {
+  if (secretPassword.value) {
+    navigator.clipboard.writeText(secretPassword.value);
+    const originalText = copyPasswordBtn.textContent;
+    copyPasswordBtn.textContent = '✅';
+    setTimeout(() => {
+      copyPasswordBtn.textContent = originalText;
+    }, 1500);
+  }
 });
 
 function resetToHome() {

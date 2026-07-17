@@ -615,9 +615,13 @@
 
         const oneTimeText = s.oneTime ? ' 🔥 Un solo uso' : '';
 
+        const frontendUrl = window.location.origin.replace('admin-secret.', 'secret.').replace(':5064', ':5063') + '/v/' + s.id;
+
         return `
           <tr id="row-${s.id}">
-            <td class="secret-id">${s.id}</td>
+            <td class="secret-id">
+              <a href="${frontendUrl}" target="_blank" style="color: var(--primary); text-decoration: none; border-bottom: 1px dashed var(--primary); font-family: monospace;" title="Abrir enlace del secreto">${s.id}</a>
+            </td>
             <td>${formatDate(s.createdAt)}</td>
             <td>${s.releaseDate ? formatDate(s.releaseDate) : 'Inmediato'}</td>
             <td>${s.expireDate ? formatDate(s.expireDate) : 'Nunca'}</td>
@@ -638,10 +642,20 @@
         if (!r.ok) throw new Error('Failed to load secret details');
         const data = await r.json();
         
+        const frontendUrl = window.location.origin.replace('admin-secret.', 'secret.').replace(':5064', ':5063') + '/v/' + data.id;
+
         const content = `
           <div class="meta-row">
             <span class="meta-label">ID del Secreto</span>
             <span class="meta-val secret-id">${data.id}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Enlace Compartido</span>
+            <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.25rem;">
+              <input type="text" value="${frontendUrl}" id="modal-share-link" readonly style="flex-grow: 1; padding: 0.5rem 0.75rem; border-radius: 8px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); font-family: monospace; font-size: 0.88rem;">
+              <button class="btn btn-secondary" onclick="copyModalLink()" style="padding: 0.5rem 0.75rem;" title="Copiar Enlace">📋</button>
+              <a href="${frontendUrl}" target="_blank" class="btn btn-secondary" style="padding: 0.5rem 0.75rem; display: flex; align-items: center; justify-content: center;" title="Ir al Secreto">🔗</a>
+            </div>
           </div>
           <div class="meta-row">
             <span class="meta-label">Fecha Creación</span>
@@ -682,6 +696,16 @@
 
     function closeModal() {
       document.getElementById('details-modal').classList.remove('open');
+    }
+
+    function copyModalLink() {
+      const input = document.getElementById('modal-share-link');
+      if (input) {
+        input.select();
+        input.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(input.value);
+        alert('Enlace copiado al portapapeles');
+      }
     }
 
     // Delete secret call
