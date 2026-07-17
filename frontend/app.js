@@ -452,21 +452,14 @@ createForm.addEventListener('submit', async (e) => {
     // Generate QR Code dynamically
     if (qrcodeContainer && typeof QRCode !== 'undefined') {
       qrcodeContainer.innerHTML = '';
-      QRCode.toCanvas(
-        shareUrl, 
-        { 
-          width: 160, 
-          margin: 1,
-          color: {
-            dark: '#0c0a09', // Match our stone-charcoal primary dark theme color
-            light: '#ffffff'
-          }
-        }, 
-        (err, canvas) => {
-          if (err) console.error('Error generating QR Code:', err);
-          else qrcodeContainer.appendChild(canvas);
-        }
-      );
+      new QRCode(qrcodeContainer, {
+        text: shareUrl,
+        width: 160,
+        height: 160,
+        colorDark: '#0c0a09', // Match our stone-charcoal primary dark theme color
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
     }
 
     if (oneTime.checked) {
