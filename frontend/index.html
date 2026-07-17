@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeftSecret | Compartir Secretos Cifrados en Destino</title>
+  <meta name="description" content="Comparte información confidencial de forma segura con cifrado de cero conocimiento de extremo a extremo. Autodestrucción y retardo de tiempo.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
+</head>
+<body>
+  <div class="background-glows">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+  </div>
+
+  <main class="app-container">
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-icon">🔒</span>
+        <h1>DeftSecret</h1>
+      </div>
+      <p class="subtitle">Compartición segura de secretos con cifrado de conocimiento cero local (AES-GCM)</p>
+    </header>
+
+    <!-- VIEW 1: CREATE SECRET -->
+    <section id="view-create" class="card">
+      <h2 class="card-title">Crear Nuevo Secreto</h2>
+      <form id="create-form" onsubmit="return false;">
+        <div class="input-group">
+          <label for="secretText">Tu mensaje secreto (máx. 1KB)</label>
+          <textarea id="secretText" placeholder="Escribe aquí tu mensaje confidencial..." maxlength="1024" required></textarea>
+          <div class="textarea-footer">
+            <span id="char-counter">0 / 1024 bytes</span>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <div class="input-group">
+            <label for="secretPassword">Contraseña de Cifrado</label>
+            <div class="password-wrapper">
+              <input type="password" id="secretPassword" placeholder="Contraseña para encriptar" required>
+              <button type="button" class="toggle-password" id="toggle-create-password" aria-label="Mostrar contraseña">👁️</button>
+            </div>
+            <span class="input-help">Esta clave cifra el texto en tu navegador. El servidor nunca la recibirá.</span>
+          </div>
+        </div>
+
+        <div class="options-accordion">
+          <button type="button" class="accordion-trigger" id="options-trigger">
+            <span>Configuración Avanzada (Fechas & Autodestrucción)</span>
+            <span class="arrow">▼</span>
+          </button>
+          
+          <div class="accordion-content" id="options-content">
+            <div class="input-row">
+              <div class="input-group">
+                <label for="releaseDate">Disponible desde (Opcional)</label>
+                <input type="datetime-local" id="releaseDate">
+                <span class="input-help">El receptor no podrá abrirlo antes de esta fecha.</span>
+              </div>
+              <div class="input-group">
+                <label for="expireDate">Expira en (Opcional)</label>
+                <input type="datetime-local" id="expireDate">
+                <span class="input-help">El mensaje se borrará y no podrá abrirse después.</span>
+              </div>
+            </div>
+
+            <div class="checkbox-group">
+              <label class="checkbox-container">
+                <input type="checkbox" id="oneTime" checked>
+                <span class="checkmark"></span>
+                <span class="checkbox-label">
+                  <strong>Secreto de un solo uso (Autodestrucción)</strong>
+                  <span class="checkbox-help">Se borrará permanentemente del servidor inmediatamente después de leerlo.</span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn btn-primary">
+          <span class="btn-text">Generar Enlace Seguro</span>
+          <span class="spinner" id="create-spinner"></span>
+        </button>
+      </form>
+    </section>
+
+    <!-- VIEW 2: SUCCESS / SHARE LINK -->
+    <section id="view-success" class="card hidden">
+      <div class="success-icon">✨</div>
+      <h2 class="card-title">¡Secreto Creado con Éxito!</h2>
+      <p class="card-desc">El mensaje ha sido cifrado en tu navegador y subido de forma segura. Comparte el siguiente enlace con el destinatario:</p>
+      
+      <div class="link-display-box">
+        <input type="text" id="shareLinkInput" readonly>
+        <button type="button" id="copyLinkBtn" class="btn btn-secondary">Copiar Enlace</button>
+      </div>
+
+      <div class="security-notices">
+        <p>🔒 <strong>Cifrado E2E:</strong> La contraseña nunca se subió al servidor. Debes compartirla por otro canal seguro.</p>
+        <p id="notice-onetimer">🔥 Este secreto es de <strong>un solo uso</strong>. Una vez que el destinatario lo abra, se autodestruirá.</p>
+      </div>
+
+      <button type="button" id="resetBtn" class="btn btn-primary">Crear Otro Secreto</button>
+    </section>
+
+    <!-- VIEW 3: RETRIEVE / DECRYPT -->
+    <section id="view-decrypt" class="card hidden">
+      <h2 class="card-title">Mensaje Cifrado Recibido</h2>
+      <p class="card-desc" id="decrypt-instructions">Este mensaje está cifrado de extremo a extremo. Introduce la contraseña establecida por el emisor para revelar el secreto.</p>
+
+      <div id="decrypt-meta-info" class="meta-info hidden">
+        <!-- Will show countdown if release date not met, or warning if one-time -->
+      </div>
+
+      <form id="decrypt-form" onsubmit="return false;">
+        <div class="input-group">
+          <label for="decryptPassword">Contraseña de Descifrado</label>
+          <div class="password-wrapper">
+            <input type="password" id="decryptPassword" placeholder="Introduce la contraseña" required>
+            <button type="button" class="toggle-password" id="toggle-decrypt-password" aria-label="Mostrar contraseña">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" id="decryptBtn" class="btn btn-primary">
+          <span class="btn-text">Descifrar Mensaje</span>
+          <span class="spinner" id="decrypt-spinner"></span>
+        </button>
+      </form>
+
+      <div id="decrypted-result" class="decrypted-result hidden">
+        <label for="decryptedText">Contenido Descifrado:</label>
+        <div class="decrypted-box">
+          <pre id="decryptedText"></pre>
+          <button type="button" id="copyDecryptedBtn" class="btn-icon-copy" title="Copiar al portapapeles">📋</button>
+        </div>
+        <div class="warning-alert" id="burn-warning">
+          🔥 <strong>¡Atención!</strong> Este secreto era de un solo uso y ha sido eliminado del servidor. No podrás volver a cargar esta página para verlo.
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: ERROR / STATE -->
+    <section id="view-error" class="card hidden">
+      <div class="error-icon">⚠️</div>
+      <h2 class="card-title" id="error-title">No se pudo acceder al secreto</h2>
+      <p class="card-desc" id="error-message">El secreto no existe, ha expirado o ya ha sido destruido por ser de un solo uso.</p>
+      
+      <div id="countdown-wrapper" class="countdown-wrapper hidden">
+        <p>Estará disponible en:</p>
+        <div id="countdown-timer">00:00:00</div>
+      </div>
+
+      <a href="/" class="btn btn-primary">Ir al Creador de Secretos</a>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>DeftSecret &copy; 2026. Alojado localmente y cifrado de forma segura en el cliente.</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
