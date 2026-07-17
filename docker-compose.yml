@@ -11,3 +11,17 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Europe/Madrid
+
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    container_name: secret-admin
+    ports:
+      - "5064:3000"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Madrid
+      - ADMIN_PASSWORD=admin123  # Cambia esta clave por una más segura en producción
