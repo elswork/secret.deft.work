@@ -24,4 +24,4 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Europe/Madrid
-      - ADMIN_PASSWORD=hwFgxC$)k9APtbQN
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
