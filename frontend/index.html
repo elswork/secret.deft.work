@@ -47,7 +47,12 @@
             <div class="password-wrapper">
               <input type="password" id="secretPassword" placeholder="Contraseña para encriptar" required>
               <button type="button" class="toggle-password" id="toggle-create-password" aria-label="Mostrar contraseña">👁️</button>
+              <button type="button" class="gen-password-btn" id="genPasswordBtn" title="Generar contraseña segura">🎲</button>
             </div>
+            <div class="strength-meter-container" id="strength-container">
+              <div class="strength-bar" id="strength-bar"></div>
+            </div>
+            <span class="strength-text" id="strength-text"></span>
             <span class="input-help">Esta clave cifra el texto en tu navegador. El servidor nunca la recibirá.</span>
           </div>
         </div>
@@ -139,7 +144,10 @@
         <label for="decryptedText">Contenido Descifrado:</label>
         <div class="decrypted-box">
           <div id="decryptedText" class="markdown-body"></div>
-          <button type="button" id="copyDecryptedBtn" class="btn-icon-copy" title="Copiar al portapapeles">📋</button>
+          <div class="decrypted-actions">
+            <button type="button" id="copyDecryptedBtn" class="btn-icon-copy" title="Copiar al portapapeles">📋</button>
+            <button type="button" id="downloadDecryptedBtn" class="btn-icon-copy" title="Descargar como archivo Markdown (.md)">💾</button>
+          </div>
         </div>
         <div class="warning-alert" id="burn-warning">
           🔥 <strong>¡Atención!</strong> Este secreto era de un solo uso y ha sido eliminado del servidor. No podrás volver a cargar esta página para verlo.

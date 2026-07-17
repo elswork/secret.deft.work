@@ -122,6 +122,10 @@ const createForm = document.getElementById('create-form');
 const secretText = document.getElementById('secretText');
 const charCounter = document.getElementById('char-counter');
 const secretPassword = document.getElementById('secretPassword');
+const genPasswordBtn = document.getElementById('genPasswordBtn');
+const strengthContainer = document.getElementById('strength-container');
+const strengthBar = document.getElementById('strength-bar');
+const strengthText = document.getElementById('strength-text');
 const releaseDate = document.getElementById('releaseDate');
 const expireDate = document.getElementById('expireDate');
 const oneTime = document.getElementById('oneTime');
@@ -141,6 +145,7 @@ const decryptSpinner = document.getElementById('decrypt-spinner');
 const decryptedResult = document.getElementById('decrypted-result');
 const decryptedText = document.getElementById('decryptedText');
 const copyDecryptedBtn = document.getElementById('copyDecryptedBtn');
+const downloadDecryptedBtn = document.getElementById('downloadDecryptedBtn');
 const burnWarning = document.getElementById('burn-warning');
 const decryptMetaInfo = document.getElementById('decrypt-meta-info');
 
@@ -218,10 +223,103 @@ copyDecryptedBtn.addEventListener('click', () => {
   copyToClipboard(decryptedText, copyDecryptedBtn, '✅ Copiado');
 });
 
+// Download Decrypted Secret as Markdown file
+downloadDecryptedBtn.addEventListener('click', () => {
+  const text = decryptedText.dataset.raw || decryptedText.textContent;
+  const blob = new Blob([text], { type: 'text/markdown;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `secreto_${new Date().toISOString().slice(0, 10)}.md`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  // Show copy-like checkmark feedback
+  const originalText = downloadDecryptedBtn.textContent;
+  downloadDecryptedBtn.textContent = '✅';
+  setTimeout(() => {
+    downloadDecryptedBtn.textContent = originalText;
+  }, 2000);
+});
+
+// Password Strength Meter evaluation
+secretPassword.addEventListener('input', () => {
+  const pass = secretPassword.value;
+  if (!pass) {
+    strengthContainer.style.display = 'none';
+    strengthText.style.display = 'none';
+    return;
+  }
+  
+  strengthContainer.style.display = 'block';
+  strengthText.style.display = 'block';
+  
+  let score = 0;
+  if (pass.length >= 8) score++;
+  if (pass.length >= 12) score++;
+  if (/[A-Z]/.test(pass)) score++;
+  if (/[0-9]/.test(pass)) score++;
+  if (/[^A-Za-z0-9]/.test(pass)) score++;
+  
+  let width = '0%';
+  let color = '';
+  let text = '';
+  
+  if (score <= 1) {
+    width = '25%';
+    color = '#f87171';
+    text = 'Debilidad extrema 🔴';
+  } else if (score === 2 || score === 3) {
+    width = '60%';
+    color = '#fbbf24';
+    text = 'Fortaleza media 🟡';
+  } else {
+    width = '100%';
+    color = '#34d399';
+    text = 'Seguridad impenetrable 🟢';
+  }
+  
+  strengthBar.style.width = width;
+  strengthBar.style.backgroundColor = color;
+  strengthText.textContent = text;
+  strengthText.style.color = color;
+});
+
+// Generate Secure Random Password
+function generateSecurePassword() {
+  // Exclude easily confused characters like l, 1, o, O, 0
+  const chars = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+  const length = 16;
+  let password = '';
+  const array = new Uint32Array(length);
+  window.crypto.getRandomValues(array);
+  for (let i = 0; i < length; i++) {
+    password += chars[array[i] % chars.length];
+  }
+  return password;
+}
+
+genPasswordBtn.addEventListener('click', () => {
+  const pass = generateSecurePassword();
+  secretPassword.value = pass;
+  secretPassword.dispatchEvent(new Event('input')); // Trigger strength evaluation
+  
+  // Show password automatically
+  secretPassword.type = 'text';
+  const toggle = document.getElementById('toggle-create-password');
+  if (toggle) toggle.textContent = '🙈';
+});
+
 function resetToHome() {
   createForm.reset();
   charCounter.textContent = '0 / 1024 bytes';
   charCounter.style.color = 'var(--text-muted)';
+  
+  // Hide strength meter
+  strengthContainer.style.display = 'none';
+  strengthText.style.display = 'none';
   
   // Reset decrypt view states in case they are open
   decryptedResult.classList.add('hidden');

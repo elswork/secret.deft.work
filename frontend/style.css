@@ -277,10 +277,25 @@ textarea:focus, input:focus {
 }
 
 .password-wrapper input {
-  padding-right: 2.75rem;
+  padding-right: 4.5rem;
 }
 
 .toggle-password {
+  position: absolute;
+  right: 2.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.gen-password-btn {
   position: absolute;
   right: 0.75rem;
   background: none;
@@ -292,6 +307,40 @@ textarea:focus, input:focus {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: var(--transition);
+}
+
+.gen-password-btn:hover {
+  color: var(--primary);
+  transform: scale(1.1) rotate(15deg);
+}
+
+/* Password Strength Meter */
+.strength-meter-container {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  display: none;
+  transition: var(--transition);
+}
+
+body.light-theme .strength-meter-container {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.strength-bar {
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-text {
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+  display: none;
   transition: var(--transition);
 }
 
@@ -655,10 +704,15 @@ textarea:focus, input:focus {
   margin-bottom: 0.75rem;
 }
 
-.btn-icon-copy {
+.decrypted-actions {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-icon-copy {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 6px;
