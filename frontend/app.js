@@ -141,6 +141,7 @@ const shareLinkInput = document.getElementById('shareLinkInput');
 const copyLinkBtn = document.getElementById('copyLinkBtn');
 const noticeOnetimer = document.getElementById('notice-onetimer');
 const qrcodeContainer = document.getElementById('qrcode-container');
+const copyQrBtn = document.getElementById('copyQrBtn');
 const resetBtn = document.getElementById('resetBtn');
 const logoLink = document.getElementById('logo-link');
 
@@ -223,6 +224,53 @@ async function copyToClipboard(inputEl, buttonEl, successText) {
 
 copyLinkBtn.addEventListener('click', () => {
   copyToClipboard(shareLinkInput, copyLinkBtn, '¡Copiado!');
+});
+
+copyQrBtn.addEventListener('click', async () => {
+  try {
+    const canvas = qrcodeContainer.querySelector('canvas');
+    const img = qrcodeContainer.querySelector('img');
+    
+    let sourceElement = null;
+    if (canvas) {
+      sourceElement = canvas;
+    } else if (img) {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = img.naturalWidth || img.width || 160;
+      tempCanvas.height = img.naturalHeight || img.height || 160;
+      const ctx = tempCanvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      sourceElement = tempCanvas;
+    }
+
+    if (!sourceElement) {
+      alert('No se pudo encontrar la imagen del código QR.');
+      return;
+    }
+
+    sourceElement.toBlob(async (blob) => {
+      if (!blob) {
+        alert('Error al generar la imagen.');
+        return;
+      }
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': blob })
+        ]);
+        const originalText = copyQrBtn.innerHTML;
+        copyQrBtn.innerHTML = '<span>✅</span> ¡QR Copiado!';
+        setTimeout(() => {
+          copyQrBtn.innerHTML = originalText;
+        }, 2000);
+      } catch (err) {
+        console.error('Clipboard write failed', err);
+        alert('Tu navegador no permite copiar imágenes directamente. Prueba a pulsar con el botón derecho en el código QR.');
+      }
+    }, 'image/png');
+  } catch (err) {
+    console.error('Copy QR image failed', err);
+    alert('Error al copiar el código QR.');
+  }
 });
 
 copyDecryptedBtn.addEventListener('click', () => {
