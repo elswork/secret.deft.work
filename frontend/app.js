@@ -136,6 +136,7 @@ const createSpinner = document.getElementById('create-spinner');
 const tabEdit = document.getElementById('tab-edit');
 const tabPreview = document.getElementById('tab-preview');
 const previewText = document.getElementById('previewText');
+const editorToolbar = document.getElementById('editor-toolbar');
 
 const shareLinkInput = document.getElementById('shareLinkInput');
 const copyLinkBtn = document.getElementById('copyLinkBtn');
@@ -383,6 +384,7 @@ if (tabEdit && tabPreview) {
     tabEdit.classList.add('active');
     tabPreview.classList.remove('active');
     secretText.classList.remove('hidden');
+    if (editorToolbar) editorToolbar.classList.remove('hidden');
     previewText.classList.add('hidden');
     secretText.focus();
   });
@@ -391,6 +393,7 @@ if (tabEdit && tabPreview) {
     tabEdit.classList.remove('active');
     tabPreview.classList.add('active');
     secretText.classList.add('hidden');
+    if (editorToolbar) editorToolbar.classList.add('hidden');
     previewText.classList.remove('hidden');
     
     const text = secretText.value.trim();
@@ -399,6 +402,56 @@ if (tabEdit && tabPreview) {
     } else {
       previewText.innerHTML = DOMPurify.sanitize(marked.parse(text));
     }
+  });
+}
+
+// Markdown Toolbar insertion logic
+if (editorToolbar) {
+  const toolButtons = editorToolbar.querySelectorAll('.tool-btn');
+  
+  function insertMarkdown(before, after = '') {
+    const start = secretText.selectionStart;
+    const end = secretText.selectionEnd;
+    const text = secretText.value;
+    const selectedText = text.substring(start, end);
+    
+    const replacement = before + selectedText + after;
+    secretText.value = text.substring(0, start) + replacement + text.substring(end);
+    
+    secretText.focus();
+    const newCursorPos = start + before.length + selectedText.length + after.length;
+    secretText.setSelectionRange(newCursorPos, newCursorPos);
+    
+    secretText.dispatchEvent(new Event('input')); // Update character counter
+  }
+
+  toolButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.dataset.type;
+      switch (type) {
+        case 'bold':
+          insertMarkdown('**', '**');
+          break;
+        case 'italic':
+          insertMarkdown('*', '*');
+          break;
+        case 'heading':
+          insertMarkdown('### ', '');
+          break;
+        case 'link':
+          insertMarkdown('[', '](url)');
+          break;
+        case 'quote':
+          insertMarkdown('> ', '');
+          break;
+        case 'code':
+          insertMarkdown('`', '`');
+          break;
+        case 'list':
+          insertMarkdown('- ', '');
+          break;
+      }
+    });
   });
 }
 
@@ -412,6 +465,7 @@ function resetToHome() {
     tabEdit.classList.add('active');
     tabPreview.classList.remove('active');
     secretText.classList.remove('hidden');
+    if (editorToolbar) editorToolbar.classList.remove('hidden');
     previewText.classList.add('hidden');
   }
   

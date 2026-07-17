@@ -41,6 +41,16 @@
               <button type="button" class="tab-btn" id="tab-preview">Vista Previa</button>
             </div>
           </div>
+          <div class="editor-toolbar" id="editor-toolbar">
+            <button type="button" class="tool-btn" data-type="bold" title="Negrita"><strong>B</strong></button>
+            <button type="button" class="tool-btn" data-type="italic" title="Cursiva"><em>I</em></button>
+            <button type="button" class="tool-btn" data-type="heading" title="Título">H</button>
+            <span class="tool-separator"></span>
+            <button type="button" class="tool-btn" data-type="link" title="Insertar Enlace">🔗</button>
+            <button type="button" class="tool-btn" data-type="quote" title="Insertar Cita">”</button>
+            <button type="button" class="tool-btn" data-type="code" title="Bloque de Código">💻</button>
+            <button type="button" class="tool-btn" data-type="list" title="Lista de viñetas">📝</button>
+          </div>
           <div class="editor-wrapper">
             <textarea id="secretText" placeholder="Escribe aquí tu mensaje confidencial..." maxlength="1024" required></textarea>
             <div id="previewText" class="preview-box markdown-body hidden"></div>
