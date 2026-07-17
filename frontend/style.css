@@ -18,6 +18,21 @@
   --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+body.light-theme {
+  --bg-main: #f5f5f4;
+  --primary-glow: rgba(217, 119, 6, 0.15);
+  --accent-glow: rgba(202, 138, 4, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-border: rgba(0, 0, 0, 0.08);
+  --input-bg: rgba(255, 255, 255, 0.95);
+  --input-border: rgba(0, 0, 0, 0.15);
+  --text-main: #1c1917;
+  --text-muted: #57534e;
+  --text-error: #dc2626;
+  --text-success: #16a34a;
+  --text-warning: #d97706;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -97,15 +112,41 @@ body {
 }
 
 .app-header {
-  text-align: center;
   margin-bottom: 2.5rem;
+}
+
+.logo-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 .logo {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 0.5rem;
+}
+
+.theme-toggle-btn {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-main);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 1.15rem;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--primary-glow);
+  border-color: var(--primary);
+  transform: scale(1.05);
 }
 
 .logo-icon {
@@ -189,7 +230,7 @@ body {
 label {
   font-size: 0.9rem;
   font-weight: 500;
-  color: #e2e8f0;
+  color: var(--text-main);
 }
 
 textarea, input[type="text"], input[type="password"], input[type="datetime-local"] {
@@ -325,7 +366,7 @@ textarea:focus, input:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #e2e8f0;
+  color: var(--text-main);
   font-family: var(--font-sans);
   font-size: 0.88rem;
   font-weight: 500;
@@ -548,11 +589,11 @@ textarea:focus, input:focus {
 .markdown-body {
   font-size: 1rem;
   line-height: 1.6;
-  color: #e2e8f0;
+  color: var(--text-main);
 }
 
 .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
-  color: #ffffff;
+  color: var(--text-main);
   margin-top: 1rem;
   margin-bottom: 0.5rem;
   font-weight: 600;
@@ -687,4 +728,69 @@ textarea:focus, input:focus {
   color: var(--text-muted);
   font-size: 0.8rem;
   border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Light theme specific overrides */
+body.light-theme {
+  text-shadow: none;
+}
+
+body.light-theme .glow {
+  opacity: 0.06;
+}
+
+body.light-theme .app-header h1 {
+  background: linear-gradient(135deg, #1c1917 30%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+body.light-theme .decrypted-box {
+  background: #eae8e6;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+body.light-theme .btn-secondary {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+  color: var(--text-main);
+}
+
+body.light-theme .btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+body.light-theme .security-notices {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: var(--primary);
+}
+
+body.light-theme .btn-icon-copy {
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--text-main);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .btn-icon-copy:hover {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+body.light-theme .accordion-content {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .options-accordion {
+  border-color: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.01);
+}
+
+body.light-theme .card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05),
+              inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme .app-footer {
+  border-top-color: rgba(0, 0, 0, 0.05);
 }
